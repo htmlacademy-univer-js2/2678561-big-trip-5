@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 import { POINT_OFFERS } from '../constants.js';
-import { getLabel } from '../utils.js';
+import { getLabel, formatDuration, formatDate, formatTime } from '../utils.js';
 
 function createPointOffersTemplate(offers) {
   if (!offers || !offers.length) {
@@ -36,42 +36,6 @@ function createFavoriteButtonTemplate(isFavorite) {
       </svg>
     </button>
   `;
-}
-
-function formatDuration(start, end) {
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-  const diffMs = endDate - startDate;
-  const diffMins = Math.floor(diffMs / 60000);
-
-  if (diffMins < 60) {
-    return `${diffMins}M`;
-  }
-
-  const hours = Math.floor(diffMins / 60);
-  const minutes = diffMins % 60;
-
-  if (minutes === 0) {
-    return `${hours}H`;
-  }
-
-  return `${hours}H ${minutes}M`;
-}
-
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  return date
-    .toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-    .toUpperCase();
-}
-
-function formatTime(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
 }
 
 function createRoutePointTemplate(data = {}) {
