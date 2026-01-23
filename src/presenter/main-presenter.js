@@ -10,7 +10,7 @@ export default class MainPresenter {
   #filtersContainer = null;
   #tripEventsContainer = null;
 
-  constructor({ sortContainer, filtersContainer, tripEventsContainer, tripControlsContainer }) {
+  constructor({ sortContainer, filtersContainer, tripEventsContainer }) {
     this.#sortContainer = sortContainer;
     this.#filtersContainer = filtersContainer;
     this.#tripEventsContainer = tripEventsContainer;
@@ -38,8 +38,7 @@ export default class MainPresenter {
       destination: 'Chamonix',
       startTime: '18/03/19 12:25',
       endTime: '18/03/19 13:35',
-      price: '160',
-      index: 1
+      price: '160'
     });
     render(editFormComponent, this.#tripEventsContainer, RenderPosition.AFTERBEGIN);
 
@@ -73,11 +72,8 @@ export default class MainPresenter {
       }
     ];
 
-    routePointsData.forEach((data, index) => {
-      const routePointComponent = new RoutePointView({
-        ...data,
-        index: index + 2
-      });
+    routePointsData.forEach((data) => {
+      const routePointComponent = new RoutePointView(data);
       render(routePointComponent, this.#tripEventsContainer);
     });
 
@@ -86,8 +82,7 @@ export default class MainPresenter {
       destination: 'Geneva',
       startTime: '19/03/19 00:00',
       endTime: '19/03/19 00:00',
-      price: '',
-      index: 5
+      price: ''
     });
     render(createFormComponent, this.#tripEventsContainer);
   }

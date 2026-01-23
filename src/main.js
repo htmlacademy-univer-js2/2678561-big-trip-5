@@ -12,6 +12,5 @@ tripEvents.append(sortContainer, eventsList);
 new MainPresenter({
   sortContainer,
   filtersContainer: document.querySelector('.trip-controls__filters'),
-  tripEventsContainer: eventsList,
-  tripControlsContainer: document.querySelector('.trip-controls')
+  tripEventsContainer: eventsList
 }).init();

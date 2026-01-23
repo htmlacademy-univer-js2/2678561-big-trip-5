@@ -1,19 +1,19 @@
-import { createElement } from "../render.js";
-import { FILTER_TYPES } from "../constants.js";
-import { getLabel } from "../utils.js";
+import { createElement } from '../render.js';
+import { FILTER_TYPES } from '../constants.js';
+import { getLabel } from '../utils.js';
 
 function createFilterItemTemplate({ type, isChecked }) {
   return `
-    <div class="trip-filters__filter">
+    <div class='trip-filters__filter'>
       <input 
-        id="filter-${type}" 
-        class="trip-filters__filter-input  visually-hidden" 
-        type="radio" 
-        name="trip-filter" 
-        value="${type}"
-        ${isChecked ? "checked" : ""}
+        id='filter-${type}' 
+        class='trip-filters__filter-input  visually-hidden' 
+        type='radio' 
+        name='trip-filter' 
+        value='${type}'
+        ${isChecked ? 'checked' : ''}
       >
-      <label class="trip-filters__filter-label" for="filter-${type}">
+      <label class='trip-filters__filter-label' for='filter-${type}'>
         ${getLabel(type)}
       </label>
     </div>
@@ -22,9 +22,9 @@ function createFilterItemTemplate({ type, isChecked }) {
 
 function createFiltersTemplate() {
   return `
-    <form class="trip-filters" action="#" method="get">
-      ${FILTER_TYPES.map(createFilterItemTemplate).join("")}
-      <button class="visually-hidden" type="submit">Accept filter</button>
+    <form class='trip-filters' action='#' method='get'>
+      ${FILTER_TYPES.map(createFilterItemTemplate).join('')}
+      <button class='visually-hidden' type='submit'>Accept filter</button>
     </form>
   `;
 }
