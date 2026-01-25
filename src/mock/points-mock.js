@@ -105,4 +105,4 @@ export const pointsMock = [
     ],
     'type': 'check-in'
   }
-]
+];

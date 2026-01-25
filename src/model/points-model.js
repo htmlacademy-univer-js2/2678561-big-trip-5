@@ -33,16 +33,16 @@ export default class PointsModel {
   }
 
   getDestinationById(id) {
-    return this.#destinations.find(d => d.id === id);
+    return this.#destinations.find((d) => d.id === id);
   }
 
   getOffersByType(type) {
-    const offerGroup = this.#offers.find(group => group.type === type);
+    const offerGroup = this.#offers.find((group) => group.type === type);
     return offerGroup ? offerGroup.offers : [];
   }
 
   getOfferById(type, offerId) {
     const offers = this.getOffersByType(type);
-    return offers.find(offer => offer.id === offerId);
+    return offers.find((offer) => offer.id === offerId);
   }
 }
