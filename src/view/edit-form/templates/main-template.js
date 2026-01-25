@@ -19,8 +19,8 @@ export function createEditFormTemplate(data = {}) {
     offers = []
   } = point;
 
-  const currentDestination = destinations.find(d => d.name === destinationName) || null;
-  const selectedOfferIds = offers.map(offer => offer.id);
+  const currentDestination = destinations.find((d) => d.name === destinationName) || null;
+  const selectedOfferIds = offers.map((offer) => offer.id);
 
   return `
     <form class='event event--edit' action='#' method='post'>

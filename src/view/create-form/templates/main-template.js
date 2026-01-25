@@ -14,7 +14,7 @@ export function createCreateFormTemplate(data = {}) {
     offersByType = []
   } = data;
 
-  let currentDestination = destinations.find(d => d.name === destination);
+  let currentDestination = destinations.find((d) => d.name === destination);
   if (!currentDestination && destinations.length > 0) {
     currentDestination = destinations[0];
   }

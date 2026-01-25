@@ -9,8 +9,8 @@ export function createSortItemTemplate({ type, isDisabled }, currentSortType) {
         type='radio'
         name='trip-sort'
         value='${type}'
-        ${currentSortType === type ? "checked" : ""}
-        ${isDisabled ? "disabled" : ""}
+        ${currentSortType === type ? 'checked' : ''}
+        ${isDisabled ? 'disabled' : ''}
       >
       <label class='trip-sort__btn' for='sort-${type}'>
         ${getLabel(type)}

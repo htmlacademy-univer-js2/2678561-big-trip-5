@@ -5,8 +5,8 @@ export function createSortTemplate(currentSortType) {
   return `
     <form class='trip-events__trip-sort trip-sort' action='#' method='get'>
       ${SORT_TYPES.map((sort) =>
-        createSortItemTemplate(sort, currentSortType),
-      ).join("")}
+    createSortItemTemplate(sort, currentSortType),
+  ).join('')}
     </form>
   `;
 }

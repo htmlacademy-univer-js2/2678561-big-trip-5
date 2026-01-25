@@ -9,7 +9,7 @@ export function createFilterItemTemplate({ type, isChecked }) {
         type='radio' 
         name='trip-filter' 
         value='${type}'
-        ${isChecked ? "checked" : ""}
+        ${isChecked ? 'checked' : ''}
       >
       <label class='trip-filters__filter-label' for='filter-${type}'>
         ${getLabel(type)}

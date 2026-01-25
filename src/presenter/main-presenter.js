@@ -1,11 +1,11 @@
-import SortView from "../view/sort/view.js";
-import FiltersView from "../view/filters/view.js";
-import CreateFormView from "../view/create-form/view.js";
-import EditFormView from "../view/edit-form/view.js";
-import RoutePointView from "../view/route-point/view.js";
+import SortView from '../view/sort/view.js';
+import FiltersView from '../view/filters/view.js';
+import CreateFormView from '../view/create-form/view.js';
+import EditFormView from '../view/edit-form/view.js';
+import RoutePointView from '../view/route-point/view.js';
 
-import { render, RenderPosition } from "../render.js";
-import { adaptPointToView } from "../utils/point-adapter.js";
+import { render, RenderPosition } from '../render.js';
+import { adaptPointToView } from '../utils/point-adapter.js';
 
 export default class MainPresenter {
   #sortContainer = null;
@@ -86,7 +86,7 @@ export default class MainPresenter {
     });
 
     const allDestinations = this.#pointsModel.getDestinations();
-    const defaultOffers = this.#pointsModel.getOffersByType("flight"); // или другой тип по умолчанию
+    const defaultOffers = this.#pointsModel.getOffersByType('flight'); // или другой тип по умолчанию
 
     render(
       new CreateFormView({
