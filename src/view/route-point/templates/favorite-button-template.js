@@ -1,5 +1,5 @@
 export function createFavoriteButtonTemplate(isFavorite) {
-  const activeClass = isFavorite ? "event__favorite-btn--active" : "";
+  const activeClass = isFavorite ? 'event__favorite-btn--active' : '';
 
   return `
     <button class='event__favorite-btn ${activeClass}' type='button'>
