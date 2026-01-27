@@ -15,16 +15,8 @@ export default class PointsModel {
     this.#offers = offersMock;
   }
 
-  getPoints() {
-    return this.#points;
-  }
-
-  getDestinations() {
+  get destinations() {
     return this.#destinations;
-  }
-
-  getOffers() {
-    return this.#offers;
   }
 
   getRandomPoints(count = POINT_COUNT_DEFAULT) {

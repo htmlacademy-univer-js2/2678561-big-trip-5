@@ -1,4 +1,4 @@
-import { getLabel } from '../../../utils/utils.js';
+import { getLabel, formatDate, formatTime } from '../../../utils/utils.js';
 import { createEventTypesTemplate } from './event-types-template.js';
 import { createDestinationOptionsTemplate } from './destination-options-template.js';
 import { createEventDetailsTemplate } from './event-details-template.js';
@@ -21,6 +21,9 @@ export function createEditFormTemplate(data = {}) {
 
   const currentDestination = destinations.find((d) => d.name === destinationName) || null;
   const selectedOfferIds = offers.map((offer) => offer.id);
+
+  const displayDateFrom = `${formatDate(dateFrom)} ${formatTime(dateFrom)}`;
+  const displayDateTo = `${formatDate(dateTo)} ${formatTime(dateTo)}`;
 
   return `
     <form class='event event--edit' action='#' method='post'>
@@ -46,10 +49,10 @@ export function createEditFormTemplate(data = {}) {
 
         <div class='event__field-group event__field-group--time'>
           <label class='visually-hidden' for='event-start-time'>From</label>
-          <input class='event__input event__input--time' id='event-start-time' type='text' name='event-start-time' value='${dateFrom}'>
+          <input class='event__input event__input--time' id='event-start-time' type='text' name='event-start-time' value='${displayDateFrom}'>
           &mdash;
           <label class='visually-hidden' for='event-end-time'>To</label>
-          <input class='event__input event__input--time' id='event-end-time' type='text' name='event-end-time' value='${dateTo}'>
+          <input class='event__input event__input--time' id='event-end-time' type='text' name='event-end-time' value='${displayDateTo}'>
         </div>
 
         <div class='event__field-group event__field-group--price'>
