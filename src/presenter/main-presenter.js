@@ -3,13 +3,13 @@ import SortView from '../view/sort/view.js';
 import FiltersView from '../view/filters/view.js';
 import EditFormView from '../view/edit-form/view.js';
 import RoutePointView from '../view/route-point/view.js';
+import EmptyPointsView from '../view/empty-points/view.js';
 
 import { getAdaptedPointData } from '../utils/point-adapter.js';
+import { isFuture, isPresent, isPast } from '../utils/filters.js';
 
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
+import { FilterType, SortType, Mode } from '../const.js';
+
 
 export default class MainPresenter {
   #sortContainer = null;
@@ -18,6 +18,8 @@ export default class MainPresenter {
   #pointsModel = null;
 
   #mode = Mode.DEFAULT;
+  #currentFilter = FilterType.EVERYTHING;
+  #currentSortType = SortType.DAY;
   #currentRoutePoint = null;
   #currentEditForm = null;
 
@@ -35,25 +37,48 @@ export default class MainPresenter {
 
   init() {
     this.#renderFilters();
-    this.#renderSort();
     this.#renderTripEvents();
   }
 
   #renderFilters() {
-    render(new FiltersView(), this.#filtersContainer);
+    const points = this.#pointsModel.getRandomPoints();
+    const filters = this.#getFiltersData(points);
+
+    render(
+      new FiltersView({
+        filters,
+        currentFilter: this.#currentFilter,
+      }),
+      this.#filtersContainer
+    );
   }
 
   #renderSort() {
-    render(new SortView(), this.#sortContainer);
+    render(
+      new SortView({ currentSortType: this.#currentSortType }),
+      this.#sortContainer
+    );
   }
+
 
   #renderTripEvents() {
     const points = this.#pointsModel.getRandomPoints();
+
+    if (points.length === 0) {
+      render(
+        new EmptyPointsView({ filterType: this.#currentFilter }),
+        this.#tripEventsContainer
+      );
+      return;
+    }
+
+    this.#renderSort();
 
     points.forEach((point) => {
       this.#renderPoint(point);
     });
   }
+
 
   #renderPoint(point) {
     const pointData = getAdaptedPointData(point, this.#pointsModel);
@@ -121,4 +146,14 @@ export default class MainPresenter {
   #handleFormSubmit = () => {
     this.#replaceFormToCard();
   };
+
+  #getFiltersData(points) {
+    return [
+      { type: FilterType.EVERYTHING, count: points.length },
+      { type: FilterType.FUTURE, count: points.filter(isFuture).length },
+      { type: FilterType.PRESENT, count: points.filter(isPresent).length },
+      { type: FilterType.PAST, count: points.filter(isPast).length },
+    ];
+  }
+
 }

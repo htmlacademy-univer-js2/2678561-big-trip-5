@@ -1,6 +1,6 @@
 import { getLabel } from '../../../utils/utils.js';
 
-export function createFilterItemTemplate({ type, isChecked }) {
+export function createFilterItemTemplate({ type, count }, currentFilter) {
   return `
     <div class='trip-filters__filter'>
       <input 
@@ -9,7 +9,8 @@ export function createFilterItemTemplate({ type, isChecked }) {
         type='radio' 
         name='trip-filter' 
         value='${type}'
-        ${isChecked ? 'checked' : ''}
+        ${type === currentFilter ? 'checked' : ''}
+        ${count === 0 ? 'disabled' : ''}
       >
       <label class='trip-filters__filter-label' for='filter-${type}'>
         ${getLabel(type)}
