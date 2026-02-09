@@ -4,25 +4,16 @@ import { SortType } from '../const.js';
 
 export default class SortPresenter {
   #container = null;
-  #pointsModel = null;
   #currentSortType = SortType.DAY;
   #sortComponent = null;
   #handleSortChange = null;
 
-  constructor({ container, pointsModel, onSortChange }) {
+  constructor({ container, onSortChange }) {
     this.#container = container;
-    this.#pointsModel = pointsModel;
     this.#handleSortChange = onSortChange;
   }
 
   init() {
-    const points = this.#pointsModel.points;
-
-    if (points.length === 0) {
-      this.destroy();
-      return;
-    }
-
     const prevComponent = this.#sortComponent;
 
     this.#sortComponent = new SortView({

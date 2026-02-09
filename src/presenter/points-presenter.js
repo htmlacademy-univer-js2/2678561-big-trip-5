@@ -20,27 +20,23 @@ export default class PointsPresenter {
   }
 
   init(sortContainer) {
+    const points = this.#pointsModel.points;
+
+    if (points.length === 0) {
+      this.#renderEmptyPoints();
+      return;
+    }
+
     this.#renderSort(sortContainer);
     this.#renderPoints();
   }
 
   #renderSort(sortContainer) {
-    const points = this.#pointsModel.points;
-
-    if (points.length === 0) {
-      if (this.#sortPresenter) {
-        this.#sortPresenter.destroy();
-        this.#sortPresenter = null;
-      }
-      return;
-    }
-
     if (this.#sortPresenter) {
       this.#sortPresenter.setSort(this.#currentSortType);
     } else {
       this.#sortPresenter = new SortPresenter({
         container: sortContainer,
-        pointsModel: this.#pointsModel,
         onSortChange: this.#handleSortChange,
       });
       this.#sortPresenter.init();
@@ -49,14 +45,12 @@ export default class PointsPresenter {
 
   #renderPoints() {
     const points = this.#getSortedPoints();
-
-    if (points.length === 0) {
-      render(new EmptyPointsView({ filterType: this.#currentFilter }), this.#container);
-      return;
-    }
-
     this.#clearPoints();
     points.forEach((point) => this.#renderPoint(point));
+  }
+
+  #renderEmptyPoints() {
+    render(new EmptyPointsView({ filterType: this.#currentFilter }), this.#container);
   }
 
   #getSortedPoints() {
@@ -117,5 +111,4 @@ export default class PointsPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
   }
-
 }
