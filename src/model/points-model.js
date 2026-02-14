@@ -23,6 +23,10 @@ export default class PointsModel {
     return this.#destinations;
   }
 
+  get offers() {
+    return this.#offers;
+  }
+
   #getRandomPoints(count) {
     return [...pointsMock]
       .sort(() => 0.5 - Math.random())
