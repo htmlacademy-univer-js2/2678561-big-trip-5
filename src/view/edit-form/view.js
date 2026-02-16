@@ -2,6 +2,7 @@ import AbstractStatefulView from '../../framework/view/abstract-stateful-view.js
 import { createEditFormTemplate } from './templates/main-template.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import dayjs from 'dayjs';
 
 export default class EditFormView extends AbstractStatefulView {
   #handleFormSubmit = null;
@@ -67,7 +68,7 @@ export default class EditFormView extends AbstractStatefulView {
       this.#datepickerFrom = flatpickr(dateFromInput, {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.point.dateFrom,
+        defaultDate: dayjs(this._state.point.dateFrom).toDate(),
         onChange: this.#dateFromChangeHandler,
       });
     }
@@ -76,15 +77,15 @@ export default class EditFormView extends AbstractStatefulView {
       this.#datepickerTo = flatpickr(dateToInput, {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.point.dateTo,
-        minDate: this._state.point.dateFrom,
+        defaultDate: dayjs(this._state.point.dateTo).toDate(),
+        minDate: dayjs(this._state.point.dateFrom).toDate(),
         onChange: this.#dateToChangeHandler,
       });
     }
   }
 
   #dateFromChangeHandler = (selectedDates) => {
-    const newDateFrom = selectedDates[0].toISOString();
+    const newDateFrom = dayjs(selectedDates[0]).toISOString();
 
     this.updateElement({
       point: {
@@ -96,16 +97,18 @@ export default class EditFormView extends AbstractStatefulView {
     if (this.#datepickerTo) {
       this.#datepickerTo.set('minDate', newDateFrom);
 
-      const currentDateTo = new Date(this._state.point.dateTo);
-      if (currentDateTo < new Date(newDateFrom)) {
-        const newDateTo = new Date(new Date(newDateFrom).getTime() + 60 * 60 * 1000);
-        this.#dateToChangeHandler([newDateTo], newDateTo.toISOString(), this.#datepickerTo);
+      const currentDateTo = dayjs(this._state.point.dateTo);
+      const newDateFromDayjs = dayjs(newDateFrom);
+
+      if (currentDateTo.isBefore(newDateFromDayjs)) {
+        const newDateTo = newDateFromDayjs.add(1, 'hour').toISOString();
+        this.#dateToChangeHandler([dayjs(newDateTo).toDate()]);
       }
     }
   };
 
   #dateToChangeHandler = (selectedDates) => {
-    const newDateTo = selectedDates[0].toISOString();
+    const newDateTo = dayjs(selectedDates[0]).toISOString();
 
     this.updateElement({
       point: {
@@ -178,14 +181,15 @@ export default class EditFormView extends AbstractStatefulView {
           destinationName: selectedDestination.name,
         },
       });
-    } else {
-      this._setState({
-        point: {
-          ...currentPoint,
-          destinationName: newDestinationName,
-        },
-      });
+      return;
     }
+
+    this._setState({
+      point: {
+        ...currentPoint,
+        destinationName: newDestinationName,
+      },
+    });
   };
 
   #offersChangeHandler = (evt) => {
@@ -213,7 +217,6 @@ export default class EditFormView extends AbstractStatefulView {
 
   #closeClickHandler = (evt) => {
     evt.preventDefault();
-    this.#destroyDatepickers();
     this.#handleCloseClick();
   };
 
