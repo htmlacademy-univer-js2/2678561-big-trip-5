@@ -46,6 +46,7 @@ export default class PointPresenter {
       onCloseClick: this.#replaceFormToCard,
       onDeleteClick: this.#handleDelete,
       onFormSubmit: this.#replaceFormToCard,
+      pointsModel: this.#pointsModel,
     });
 
     if (!prevRoutePoint || !prevEditForm) {
