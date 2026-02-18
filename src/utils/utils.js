@@ -31,11 +31,9 @@ export function formatDuration(start, end) {
 }
 
 export function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+  return dayjs(dateStr).format('MMM DD').toUpperCase();
 }
 
 export function formatTime(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  return dayjs(dateStr).format('HH:mm');
 }
