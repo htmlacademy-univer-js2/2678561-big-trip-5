@@ -1,5 +1,6 @@
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view.js';
 import { createEditFormTemplate } from './templates/main-template.js';
+import { isFormValid } from '../../utils/validate.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
@@ -42,7 +43,10 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   get template() {
-    return createEditFormTemplate(this._state);
+    return createEditFormTemplate(this._state, isFormValid(
+      this._state.point,
+      this._state.destinations
+    ));
   }
 
   reset(initialPoint) {
@@ -73,6 +77,16 @@ export default class EditFormView extends AbstractStatefulView {
     this.#setOffersChangeHandlers();
 
     this.#initDatepickers();
+    this.#updateSaveButtonState();
+  }
+
+  #updateSaveButtonState() {
+    const isValid = isFormValid(this._state.point, this._state.destinations);
+    const saveButton = this.element.querySelector('.event__save-btn');
+
+    if (saveButton) {
+      saveButton.disabled = !isValid;
+    }
   }
 
   #initDatepickers() {
@@ -186,6 +200,7 @@ export default class EditFormView extends AbstractStatefulView {
         destinationName: newDestinationName,
       },
     });
+    this.#updateSaveButtonState();
   };
 
   #destinationChangeHandler = (evt) => {
@@ -205,15 +220,15 @@ export default class EditFormView extends AbstractStatefulView {
           destinationName: selectedDestination.name,
         },
       });
-      return;
+    } else {
+      this._setState({
+        point: {
+          ...currentPoint,
+          destinationName: newDestinationName,
+        },
+      });
     }
-
-    this._setState({
-      point: {
-        ...currentPoint,
-        destinationName: newDestinationName,
-      },
-    });
+    this.#updateSaveButtonState();
   };
 
   #offersChangeHandler = (evt) => {
@@ -237,6 +252,7 @@ export default class EditFormView extends AbstractStatefulView {
     });
 
     evt.target.checked = isChecked;
+    this.#updateSaveButtonState();
   };
 
   #priceChangeHandler = (evt) => {
@@ -248,6 +264,7 @@ export default class EditFormView extends AbstractStatefulView {
         price: value,
       },
     });
+    this.#updateSaveButtonState();
   };
 
   #closeClickHandler = (evt) => {
@@ -263,7 +280,9 @@ export default class EditFormView extends AbstractStatefulView {
 
   #submitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this._state.point);
+    if (isFormValid(this._state.point, this._state.destinations)) {
+      this.#handleFormSubmit(this._state.point);
+    }
   };
 
   #destroyDatepickers() {

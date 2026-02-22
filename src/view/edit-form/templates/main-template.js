@@ -3,7 +3,7 @@ import { createEventTypesTemplate } from './event-types-template.js';
 import { createDestinationOptionsTemplate } from './destination-options-template.js';
 import { createEventDetailsTemplate } from './event-details-template.js';
 
-export function createEditFormTemplate(data = {}) {
+export function createEditFormTemplate(data = {}, isFormValid = true) {
   const { point = {}, destinations = [], offersByType = [] } = data;
 
   const {
@@ -59,10 +59,10 @@ export function createEditFormTemplate(data = {}) {
             <span class='visually-hidden'>Price</span>
             &euro;
           </label>
-          <input class='event__input event__input--price' id='event-price' type='number' name='event-price' value='${price}' required>
+          <input class='event__input event__input--price' id='event-price' type='number' min='0' max='1000000' step='1' name='event-price' value='${price}' required>
         </div>
 
-        <button class='event__save-btn btn btn--blue' type='submit'>Save</button>
+        <button class='event__save-btn btn btn--blue' type='submit' ${!isFormValid ? 'disabled' : ''}>Save</button>
         <button class='event__reset-btn' type='reset'>Delete</button>
         <button class='event__rollup-btn' type='button'>
           <span class='visually-hidden'>Open event</span>
