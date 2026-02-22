@@ -2,6 +2,7 @@ import { render, replace, remove } from '../framework/render.js';
 import RoutePointView from '../view/route-point/view.js';
 import EditFormView from '../view/edit-form/view.js';
 import { getAdaptedPointData } from '../utils/point-adapter.js';
+import { UserAction, UpdateType } from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -45,7 +46,7 @@ export default class PointPresenter {
       offersByType: this.#pointsModel.getOffersByType(point.type),
       onCloseClick: this.#replaceFormToCard,
       onDeleteClick: this.#handleDelete,
-      onFormSubmit: this.#replaceFormToCard,
+      onFormSubmit: this.#handleFormSubmit,
       pointsModel: this.#pointsModel,
     });
 
@@ -102,14 +103,31 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({
-      ...this.#point,
-      isFavorite: !this.#point.isFavorite,
-    });
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {
+        ...this.#point,
+        isFavorite: !this.#point.isFavorite,
+      }
+    );
   };
 
   #handleDelete = () => {
-    this.destroy();
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      this.#point
+    );
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+  };
+
+  #handleFormSubmit = (updatedPoint) => {
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      updatedPoint
+    );
+    this.#replaceFormToCard();
   };
 }

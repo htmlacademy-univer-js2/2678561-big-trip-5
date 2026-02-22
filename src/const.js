@@ -40,6 +40,18 @@ export const Mode = {
   EDITING: 'EDITING',
 };
 
+export const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
 export const EmptyPointsText = {
   everything: 'Click New Event to create your first point',
   past: 'There are no past events now',

@@ -2,8 +2,8 @@ export const pointsMock = [
   {
     'id': '30dc8837-7719-4371-ae37-4f357a2d16b0',
     'base_price': 2274,
-    'date_from': '2026-01-16T09:17:05.783Z',
-    'date_to': '2026-01-16T10:06:05.783Z',
+    'date_from': '2026-02-18T09:17:05.783Z',
+    'date_to': '2026-02-20T10:06:05.783Z',
     'destination': '1715f7a0-e610-4919-830d-efbe39962c20',
     'isFavorite': true,
     'offers': [],

@@ -1,42 +1,79 @@
 import FilterPresenter from './filter-presenter.js';
 import PointsPresenter from './points-presenter.js';
-import { FilterType } from '../const.js';
+import CreatePresenter from './create-presenter.js';
+import { UserAction, UpdateType, FilterType } from '../const.js';
 
 export default class BoardPresenter {
   #pointsModel = null;
+  #filterModel = null;
   #filtersPresenter = null;
   #pointsPresenter = null;
-  #currentFilter = FilterType.EVERYTHING;
+  #createPresenter = null;
   #sortContainer = null;
 
-  constructor({ sortContainer, filtersContainer, tripEventsContainer, pointsModel }) {
+  constructor({ sortContainer, filtersContainer, tripEventsContainer, pointsModel, filterModel }) {
     this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
 
     this.#filtersPresenter = new FilterPresenter({
       container: filtersContainer,
       pointsModel: this.#pointsModel,
-      onFilterChange: this.#handleFilterChange,
-      currentFilter: this.#currentFilter,
+      filterModel: this.#filterModel,
     });
 
     this.#pointsPresenter = new PointsPresenter({
       container: tripEventsContainer,
       pointsModel: this.#pointsModel,
-      currentFilter: this.#currentFilter,
+      filterModel: this.#filterModel,
+    });
+
+    this.#createPresenter = new CreatePresenter({
+      container: tripEventsContainer,
+      pointsModel: this.#pointsModel,
+      onDataChange: this.#handleViewAction,
     });
 
     this.#sortContainer = sortContainer;
   }
 
+  get points() {
+    return this.#pointsModel.points;
+  }
+
+  #handleNewEventClick = () => {
+
+    this.#filterModel.setFilter(
+      UpdateType.MAJOR,
+      FilterType.EVERYTHING
+    );
+
+    this.#createPresenter.init();
+  };
+
+  #handleViewAction = (actionType, updateType, update) => {
+    switch (actionType) {
+
+      case UserAction.UPDATE_POINT:
+        this.#pointsModel.updatePoint(updateType, update);
+        break;
+
+      case UserAction.ADD_POINT:
+        this.#pointsModel.addPoint(updateType, update);
+        break;
+
+      case UserAction.DELETE_POINT:
+        this.#pointsModel.deletePoint(updateType, update.id);
+        break;
+    }
+  };
+
   init() {
     this.#filtersPresenter.init();
     this.#pointsPresenter.init(this.#sortContainer);
+
+    document
+      .querySelector('.trip-main__event-add-btn')
+      .addEventListener('click', this.#handleNewEventClick);
   }
 
-  #handleFilterChange = (filterType) => {
-    this.#currentFilter = filterType;
-    this.#pointsPresenter.setFilter(filterType);
-    this.#pointsPresenter.destroy();
-    this.#pointsPresenter.init(this.#sortContainer);
-  };
 }
