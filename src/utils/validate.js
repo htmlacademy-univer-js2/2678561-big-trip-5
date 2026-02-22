@@ -1,6 +1,7 @@
+import dayjs from 'dayjs';
+
 export const isPriceValid = (price) =>
   !isNaN(price) && price >= 0 && Number.isInteger(price) && price <= 1000000;
-
 
 export const isDestinationValid = (destinationName, destinations) => {
   if (!destinationName || destinationName.trim() === '') {
@@ -17,14 +18,14 @@ export const isDatesValid = (dateFrom, dateTo) => {
     return false;
   }
 
-  const from = new Date(dateFrom);
-  const to = new Date(dateTo);
+  const from = dayjs(dateFrom);
+  const to = dayjs(dateTo);
 
-  if (isNaN(from.getTime()) || isNaN(to.getTime())) {
+  if (!from.isValid() || !to.isValid()) {
     return false;
   }
 
-  return to >= from;
+  return to.isSame(from) || to.isAfter(from);
 };
 
 export const isFormValid = (point, destinations) => {

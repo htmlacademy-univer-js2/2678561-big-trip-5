@@ -50,7 +50,7 @@ export default class BoardPresenter {
       UpdateType.MAJOR,
       FilterType.EVERYTHING
     );
-    
+
     this.#createPresenter.init();
   };
 

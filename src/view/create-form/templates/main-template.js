@@ -2,6 +2,7 @@ import { getLabel, formatDate, formatTime } from '../../../utils/utils.js';
 import { createEventTypesTemplate } from './event-types-template.js';
 import { createDestinationOptionsTemplate } from './destination-options-template.js';
 import { createEventDetailsTemplate } from './event-details-template.js';
+import dayjs from 'dayjs';
 
 export function createCreateFormTemplate(data = {}, isFormValid = true) {
   const { point = {}, destinations = [], offersByType = [] } = data;

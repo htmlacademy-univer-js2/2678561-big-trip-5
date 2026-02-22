@@ -15,6 +15,7 @@ export default class PointsPresenter {
   #currentSortType = SortType.DAY;
   #sortPresenter = null;
   #emptyPointsComponent = null;
+  #sortContainer = null;
 
   constructor({ container, pointsModel, filterModel }) {
     this.#container = container;
@@ -26,20 +27,30 @@ export default class PointsPresenter {
   }
 
   init(sortContainer) {
-    this.#renderSort(sortContainer);
+    this.#sortContainer = sortContainer;
+    this.#renderSort();
     this.#renderPointsList();
   }
 
-  #renderSort(sortContainer) {
-    if (this.#sortPresenter) {
-      this.#sortPresenter.setSort(this.#currentSortType);
-    } else {
+  #renderSort() {
+    const pointsCount = this.#getFilteredPoints().length;
+
+    if (pointsCount === 0) {
+      if (this.#sortPresenter) {
+        this.#sortPresenter.destroy();
+        this.#sortPresenter = null;
+      }
+      return;
+    }
+
+    if (!this.#sortPresenter) {
       this.#sortPresenter = new SortPresenter({
-        container: sortContainer,
+        container: this.#sortContainer,
         onSortChange: this.#handleSortChange,
       });
-      this.#sortPresenter.init();
     }
+
+    this.#sortPresenter.init(this.#currentSortType);
   }
 
   #renderPoints() {
@@ -47,12 +58,14 @@ export default class PointsPresenter {
     points.forEach((point) => this.#renderPoint(point));
   }
 
-  #getSortedPoints() {
+  #getFilteredPoints() {
     const filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
+    return filter[filterType](points);
+  }
 
-    const filteredPoints = filter[filterType](points);
-
+  #getSortedPoints() {
+    const filteredPoints = this.#getFilteredPoints();
     return sortPointsBy(filteredPoints, this.#currentSortType);
   }
 
@@ -86,11 +99,6 @@ export default class PointsPresenter {
 
       case UpdateType.MAJOR:
         this.#currentSortType = SortType.DAY;
-
-        if (this.#sortPresenter) {
-          this.#sortPresenter.setSort(this.#currentSortType);
-        }
-
         this.#reRenderPoints();
         break;
     }
@@ -129,14 +137,16 @@ export default class PointsPresenter {
 
   #renderPointsList() {
     const points = this.#getSortedPoints();
+    const hasPoints = points.length > 0;
 
-    if (points.length === 0) {
+    this.#renderSort();
+
+    if (hasPoints) {
+      this.#removeEmptyPoints();
+      this.#renderPoints();
+    } else {
       this.#renderEmptyPoints();
-      return;
     }
-
-    this.#removeEmptyPoints();
-    this.#renderPoints();
   }
 
   #renderEmptyPoints() {

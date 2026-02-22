@@ -67,7 +67,7 @@ export default class CreateFormView extends AbstractStatefulView {
   #updateSaveButtonState() {
     const isValid = isFormValid(this._state.point, this._state.destinations);
     const saveButton = this.element.querySelector('.event__save-btn');
-    
+
     if (saveButton) {
       saveButton.disabled = !isValid;
     }
@@ -184,7 +184,7 @@ export default class CreateFormView extends AbstractStatefulView {
         destinationName: newDestinationName,
       },
     });
-    
+
     this.#updateSaveButtonState();
   };
 
@@ -213,7 +213,7 @@ export default class CreateFormView extends AbstractStatefulView {
         },
       });
     }
-    
+
     this.#updateSaveButtonState();
   };
 
@@ -250,7 +250,7 @@ export default class CreateFormView extends AbstractStatefulView {
         price: value,
       },
     });
-    
+
     this.#updateSaveButtonState();
   };
 
