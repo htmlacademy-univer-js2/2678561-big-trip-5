@@ -262,7 +262,7 @@ export default class CreateFormView extends AbstractStatefulView {
 
   #submitHandler = (evt) => {
     evt.preventDefault();
-    
+
     if (isFormValid(this._state.point, this._state.destinations)) {
       this.#destroyDatepickers();
       this.#handleSubmit(this._state.point);
