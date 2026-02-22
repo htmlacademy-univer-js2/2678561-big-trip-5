@@ -40,7 +40,6 @@ export default class CreatePresenter {
   }
 
   #handleSubmit = (point) => {
-
     this.#onDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
@@ -54,4 +53,7 @@ export default class CreatePresenter {
     this.destroy();
   };
 
+  isCreating() {
+    return this.#createFormComponent !== null;
+  }
 }

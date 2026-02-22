@@ -42,11 +42,15 @@ export default class BoardPresenter {
 
   #handleNewEventClick = () => {
 
+    if (this.#createPresenter.isCreating()) {
+      return;
+    }
+
     this.#filterModel.setFilter(
       UpdateType.MAJOR,
       FilterType.EVERYTHING
     );
-
+    
     this.#createPresenter.init();
   };
 
