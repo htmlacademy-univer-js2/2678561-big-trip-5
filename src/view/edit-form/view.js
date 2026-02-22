@@ -11,6 +11,7 @@ export default class EditFormView extends AbstractStatefulView {
   #pointsModel = null;
   #datepickerFrom = null;
   #datepickerTo = null;
+  #initialState = null;
 
   constructor({
     point,
@@ -23,11 +24,14 @@ export default class EditFormView extends AbstractStatefulView {
   }) {
     super();
 
-    this._state = {
+    const initialState = {
       point: { ...point },
       destinations,
       offersByType,
     };
+
+    this._state = initialState;
+    this.#initialState = JSON.parse(JSON.stringify(initialState));
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleCloseClick = onCloseClick;
@@ -41,17 +45,28 @@ export default class EditFormView extends AbstractStatefulView {
     return createEditFormTemplate(this._state);
   }
 
+  reset(initialPoint) {
+    if (initialPoint) {
+      this.#initialState.point = { ...initialPoint };
+    }
+
+    this.updateElement(this.#initialState);
+  }
+
   _restoreHandlers() {
     this.element
       .querySelector('.event__rollup-btn')
       .addEventListener('click', this.#closeClickHandler);
 
-    this.element
-      .addEventListener('submit', this.#submitHandler);
+    this.element.addEventListener('submit', this.#submitHandler);
 
     this.element
       .querySelector('.event__reset-btn')
       .addEventListener('click', this.#deleteClickHandler);
+
+    this.element
+      .querySelector('#event-price')
+      .addEventListener('input', this.#priceChangeHandler);
 
     this.#setTypeChangeHandlers();
     this.#setDestinationChangeHandler();
@@ -126,15 +141,22 @@ export default class EditFormView extends AbstractStatefulView {
   }
 
   #setDestinationChangeHandler() {
-    const destinationInput = this.element.querySelector('.event__input--destination');
+    const destinationInput = this.element.querySelector(
+      '.event__input--destination',
+    );
     if (destinationInput) {
       destinationInput.addEventListener('input', this.#destinationInputHandler);
-      destinationInput.addEventListener('change', this.#destinationChangeHandler);
+      destinationInput.addEventListener(
+        'change',
+        this.#destinationChangeHandler,
+      );
     }
   }
 
   #setOffersChangeHandlers() {
-    const offerCheckboxes = this.element.querySelectorAll('.event__offer-checkbox');
+    const offerCheckboxes = this.element.querySelectorAll(
+      '.event__offer-checkbox',
+    );
     offerCheckboxes.forEach((checkbox) => {
       checkbox.addEventListener('change', this.#offersChangeHandler);
     });
@@ -171,7 +193,9 @@ export default class EditFormView extends AbstractStatefulView {
     const currentPoint = this._state.point;
     const destinations = this._state.destinations;
 
-    const selectedDestination = destinations.find((d) => d.name === newDestinationName);
+    const selectedDestination = destinations.find(
+      (d) => d.name === newDestinationName,
+    );
 
     if (selectedDestination) {
       this.updateElement({
@@ -215,6 +239,17 @@ export default class EditFormView extends AbstractStatefulView {
     evt.target.checked = isChecked;
   };
 
+  #priceChangeHandler = (evt) => {
+    const value = Number(evt.target.value);
+
+    this._setState({
+      point: {
+        ...this._state.point,
+        price: value,
+      },
+    });
+  };
+
   #closeClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleCloseClick();
@@ -228,7 +263,7 @@ export default class EditFormView extends AbstractStatefulView {
 
   #submitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this._state.point);
   };
 
   #destroyDatepickers() {

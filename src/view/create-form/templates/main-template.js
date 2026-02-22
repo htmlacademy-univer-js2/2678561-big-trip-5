@@ -37,7 +37,7 @@ export function createCreateFormTemplate(data = {}) {
           <label class='event__label event__type-output' for='event-destination'>
             ${getLabel(type)}
           </label>
-          <input class='event__input event__input--destination' id='event-destination' type='text' name='event-destination' value='${currentDestination?.name || ''}' list='destination-list'>
+          <input class='event__input event__input--destination' id='event-destination' type='text' name='event-destination' value='${currentDestination?.name || ''}' list='destination-list' required>
           ${createDestinationOptionsTemplate(destinations)}
         </div>
 
@@ -54,7 +54,7 @@ export function createCreateFormTemplate(data = {}) {
             <span class='visually-hidden'>Price</span>
             &euro;
           </label>
-          <input class='event__input event__input--price' id='event-price' type='number' name='event-price' value='${price} required min='1''>
+          <input class='event__input event__input--price' id='event-price' type='number' name='event-price' value='${price}' required min='1'>
         </div>
 
         <button class='event__save-btn btn btn--blue' type='submit'>Save</button>

@@ -4,23 +4,22 @@ import { createDestinationOptionsTemplate } from './destination-options-template
 import { createEventDetailsTemplate } from './event-details-template.js';
 
 export function createEditFormTemplate(data = {}) {
-  const {
-    point = {},
-    destinations = [],
-    offersByType = []
-  } = data;
+  const { point = {}, destinations = [], offersByType = [] } = data;
 
   const {
     type = 'flight',
-    destinationName = '',
+    destination = '',
     dateFrom = '18/03/19 12:25',
     dateTo = '18/03/19 13:35',
-    price = '160',
-    offers = []
+    price = 0,
+    offers = [],
   } = point;
 
-  const currentDestination = destinations.find((d) => d.name === destinationName) || null;
-  const selectedOfferIds = offers.map((offer) => offer.id);
+  const destinationObj = destinations.find((d) => d.id === destination);
+  const destinationName = destinationObj?.name ?? '';
+  const currentDestination =
+  destinations.find((d) => d.name === destinationName) || null;
+  const selectedOfferIds = offers;
 
   const displayDateFrom = `${formatDate(dateFrom)} ${formatTime(dateFrom)}`;
   const displayDateTo = `${formatDate(dateTo)} ${formatTime(dateTo)}`;
@@ -43,16 +42,16 @@ export function createEditFormTemplate(data = {}) {
           <label class='event__label event__type-output' for='event-destination'>
             ${getLabel(type)}
           </label>
-          <input class='event__input event__input--destination' id='event-destination' type='text' name='event-destination' value='${destinationName}' list='destination-list'>
+          <input class='event__input event__input--destination' id='event-destination' type='text' name='event-destination' value='${destinationName}' list='destination-list' required>
           ${createDestinationOptionsTemplate(destinations)}
         </div>
 
         <div class='event__field-group event__field-group--time'>
           <label class='visually-hidden' for='event-start-time'>From</label>
-          <input class='event__input event__input--time' id='event-start-time' type='text' name='event-start-time' value='${displayDateFrom}'>
+          <input class='event__input event__input--time' id='event-start-time' type='text' name='event-start-time' value='${displayDateFrom}' required>
           &mdash;
           <label class='visually-hidden' for='event-end-time'>To</label>
-          <input class='event__input event__input--time' id='event-end-time' type='text' name='event-end-time' value='${displayDateTo}'>
+          <input class='event__input event__input--time' id='event-end-time' type='text' name='event-end-time' value='${displayDateTo}' required>
         </div>
 
         <div class='event__field-group event__field-group--price'>
@@ -60,7 +59,7 @@ export function createEditFormTemplate(data = {}) {
             <span class='visually-hidden'>Price</span>
             &euro;
           </label>
-          <input class='event__input event__input--price' id='event-price' type='number' name='event-price' value='${price}'>
+          <input class='event__input event__input--price' id='event-price' type='number' name='event-price' value='${price}' required>
         </div>
 
         <button class='event__save-btn btn btn--blue' type='submit'>Save</button>

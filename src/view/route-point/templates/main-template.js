@@ -21,16 +21,16 @@ export function createRoutePointTemplate(point = {}) {
   return `
     <li class='trip-events__item'>
       <div class='event'>
-        <time class='event__date' datetime='${point.date_from || ''}'>${formattedDate}</time>
+        <time class='event__date' datetime='${point.dateFrom || ''}'>${formattedDate}</time>
         <div class='event__type'>
           <img class='event__type-icon' width='42' height='42' src='img/icons/${type}.png' alt='Event type icon'>
         </div>
         <h3 class='event__title'>${title}</h3>
         <div class='event__schedule'>
           <p class='event__time'>
-            <time class='event__start-time' datetime='${point.date_from || ''}'>${formattedStartTime}</time>
+            <time class='event__start-time' datetime='${point.dateFrom || ''}'>${formattedStartTime}</time>
             &mdash;
-            <time class='event__end-time' datetime='${point.date_to || ''}'>${formattedEndTime}</time>
+            <time class='event__end-time' datetime='${point.dateTo || ''}'>${formattedEndTime}</time>
           </p>
           <p class='event__duration'>${duration}</p>
         </div>

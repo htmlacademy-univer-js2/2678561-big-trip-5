@@ -127,9 +127,22 @@ export default class PointsPresenter {
     this.#reRenderPoints();
   };
 
+  #renderPointsList() {
+    const points = this.#getSortedPoints();
+
+    if (points.length === 0) {
+      this.#renderEmptyPoints();
+      return;
+    }
+
+    this.#removeEmptyPoints();
+    this.#renderPoints();
+  }
+
   #renderEmptyPoints() {
     if (this.#emptyPointsComponent) {
-      return;
+      remove(this.#emptyPointsComponent);
+      this.#emptyPointsComponent = null;
     }
 
     this.#emptyPointsComponent = new EmptyPointsView({
@@ -146,18 +159,6 @@ export default class PointsPresenter {
 
     remove(this.#emptyPointsComponent);
     this.#emptyPointsComponent = null;
-  }
-
-  #renderPointsList() {
-    const points = this.#getSortedPoints();
-
-    if (points.length === 0) {
-      this.#renderEmptyPoints();
-      return;
-    }
-
-    this.#removeEmptyPoints();
-    this.#renderPoints();
   }
 
   #reRenderPoints() {

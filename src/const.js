@@ -1,4 +1,4 @@
-export const POINT_COUNT_DEFAULT = 5;
+export const POINT_COUNT_DEFAULT = 2;
 
 export const SORT_TYPES = [
   { type: 'day', isDisabled: false },
