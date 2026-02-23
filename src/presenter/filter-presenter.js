@@ -1,20 +1,20 @@
 import { render, replace, remove } from '../framework/render.js';
 import FiltersView from '../view/filters/view.js';
-import { FilterType } from '../const.js';
+import { FilterType, UpdateType } from '../const.js';
 import { isFuture, isPresent, isPast } from '../utils/filters.js';
 
 export default class FilterPresenter {
   #container = null;
   #pointsModel = null;
-  #currentFilter = null;
+  #filterModel = null;
   #filterComponent = null;
-  #handleFilterChange = null;
 
-  constructor({ container, pointsModel, onFilterChange, currentFilter }) {
+  constructor({ container, pointsModel, filterModel }) {
     this.#container = container;
     this.#pointsModel = pointsModel;
-    this.#handleFilterChange = onFilterChange;
-    this.#currentFilter = currentFilter;
+    this.#filterModel = filterModel;
+
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   init() {
@@ -24,7 +24,7 @@ export default class FilterPresenter {
 
     this.#filterComponent = new FiltersView({
       filters,
-      currentFilter: this.#currentFilter,
+      currentFilter: this.#filterModel.filter,
       onFilterChange: this.#handleFilterTypeChange,
     });
 
@@ -37,18 +37,15 @@ export default class FilterPresenter {
     remove(prevComponent);
   }
 
-  setFilter(filterType) {
-    this.#currentFilter = filterType;
-    this.init();
-  }
-
   #handleFilterTypeChange = (filterType) => {
-    if (this.#currentFilter === filterType) {
+    if (this.#filterModel.filter === filterType) {
       return;
     }
 
-    this.#currentFilter = filterType;
-    this.#handleFilterChange(filterType);
+    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+  };
+
+  #handleModelEvent = () => {
     this.init();
   };
 

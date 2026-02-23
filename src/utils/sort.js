@@ -7,16 +7,18 @@ export const sortPointsBy = (points, sortType) => {
   switch (sortType) {
     case SortType.TIME:
       return sortedPoints.sort((a, b) => {
-        const durationA = dayjs(a.date_to).diff(dayjs(a.date_from));
-        const durationB = dayjs(b.date_to).diff(dayjs(b.date_from));
+        const durationA = dayjs(a.dateTo).diff(dayjs(a.dateFrom));
+        const durationB = dayjs(b.dateTo).diff(dayjs(b.dateFrom));
         return durationB - durationA;
       });
 
     case SortType.PRICE:
-      return sortedPoints.sort((a, b) => b.base_price - a.base_price);
+      return sortedPoints.sort((a, b) => b.price - a.price);
 
     case SortType.DAY:
     default:
-      return sortedPoints.sort((a, b) => dayjs(a.date_from).diff(dayjs(b.date_from)));
+      return sortedPoints.sort((a, b) =>
+        dayjs(a.dateFrom).diff(dayjs(b.dateFrom)),
+      );
   }
 };

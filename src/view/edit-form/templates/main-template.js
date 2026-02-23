@@ -3,24 +3,23 @@ import { createEventTypesTemplate } from './event-types-template.js';
 import { createDestinationOptionsTemplate } from './destination-options-template.js';
 import { createEventDetailsTemplate } from './event-details-template.js';
 
-export function createEditFormTemplate(data = {}) {
-  const {
-    point = {},
-    destinations = [],
-    offersByType = []
-  } = data;
+export function createEditFormTemplate(data = {}, isFormValid = true) {
+  const { point = {}, destinations = [], offersByType = [] } = data;
 
   const {
     type = 'flight',
-    destinationName = '',
+    destination = '',
     dateFrom = '18/03/19 12:25',
     dateTo = '18/03/19 13:35',
-    price = '160',
-    offers = []
+    price = 0,
+    offers = [],
   } = point;
 
-  const currentDestination = destinations.find((d) => d.name === destinationName) || null;
-  const selectedOfferIds = offers.map((offer) => offer.id);
+  const destinationObj = destinations.find((d) => d.id === destination);
+  const destinationName = destinationObj?.name ?? '';
+  const currentDestination =
+  destinations.find((d) => d.name === destinationName) || null;
+  const selectedOfferIds = offers;
 
   const displayDateFrom = `${formatDate(dateFrom)} ${formatTime(dateFrom)}`;
   const displayDateTo = `${formatDate(dateTo)} ${formatTime(dateTo)}`;
@@ -43,16 +42,16 @@ export function createEditFormTemplate(data = {}) {
           <label class='event__label event__type-output' for='event-destination'>
             ${getLabel(type)}
           </label>
-          <input class='event__input event__input--destination' id='event-destination' type='text' name='event-destination' value='${destinationName}' list='destination-list'>
+          <input class='event__input event__input--destination' id='event-destination' type='text' name='event-destination' value='${destinationName}' list='destination-list' required>
           ${createDestinationOptionsTemplate(destinations)}
         </div>
 
         <div class='event__field-group event__field-group--time'>
           <label class='visually-hidden' for='event-start-time'>From</label>
-          <input class='event__input event__input--time' id='event-start-time' type='text' name='event-start-time' value='${displayDateFrom}'>
+          <input class='event__input event__input--time' id='event-start-time' type='text' name='event-start-time' value='${displayDateFrom}' required>
           &mdash;
           <label class='visually-hidden' for='event-end-time'>To</label>
-          <input class='event__input event__input--time' id='event-end-time' type='text' name='event-end-time' value='${displayDateTo}'>
+          <input class='event__input event__input--time' id='event-end-time' type='text' name='event-end-time' value='${displayDateTo}' required>
         </div>
 
         <div class='event__field-group event__field-group--price'>
@@ -60,10 +59,10 @@ export function createEditFormTemplate(data = {}) {
             <span class='visually-hidden'>Price</span>
             &euro;
           </label>
-          <input class='event__input event__input--price' id='event-price' type='text' name='event-price' value='${price}'>
+          <input class='event__input event__input--price' id='event-price' type='number' min='0' max='1000000' step='1' name='event-price' value='${price}' required>
         </div>
 
-        <button class='event__save-btn btn btn--blue' type='submit'>Save</button>
+        <button class='event__save-btn btn btn--blue' type='submit' ${!isFormValid ? 'disabled' : ''}>Save</button>
         <button class='event__reset-btn' type='reset'>Delete</button>
         <button class='event__rollup-btn' type='button'>
           <span class='visually-hidden'>Open event</span>

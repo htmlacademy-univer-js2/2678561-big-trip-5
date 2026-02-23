@@ -1,15 +1,17 @@
 import { pointsMock } from '../mock/points-mock.js';
 import { destinationsMock } from '../mock/destinations-mock.js';
 import { offersMock } from '../mock/offers-mock.js';
+import Observable from '../framework/observable.js';
 
 import { POINT_COUNT_DEFAULT } from '../const.js';
 
-export default class PointsModel {
+export default class PointsModel extends Observable {
   #points = [];
   #destinations = [];
   #offers = [];
 
   constructor() {
+    super();
     this.#points = this.#getRandomPoints(POINT_COUNT_DEFAULT);
     this.#destinations = destinationsMock;
     this.#offers = offersMock;
@@ -46,10 +48,39 @@ export default class PointsModel {
     return this.getOffersByType(type).find((offer) => offer.id === offerId);
   }
 
-  updatePoint(updatedPoint) {
-    this.#points = this.#points.map((point) =>
-      point.id === updatedPoint.id ? updatedPoint : point
-    );
+  setPoints(updateType, points) {
+    this.#points = [...points];
+    this._notify(updateType);
+  }
+
+  updatePoint(updateType, updatedPoint) {
+    const index = this.#points.findIndex((point) => point.id === updatedPoint.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting point');
+    }
+
+    this.#points = [
+      ...this.#points.slice(0, index),
+      updatedPoint,
+      ...this.#points.slice(index + 1),
+    ];
+
+    this._notify(updateType, updatedPoint);
+  }
+
+  addPoint(updateType, update) {
+    this.#points = [
+      update,
+      ...this.#points,
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  deletePoint(updateType, update) {
+    this.#points = this.#points.filter((point) => point.id !== update);
+    this._notify(updateType);
   }
 
 }

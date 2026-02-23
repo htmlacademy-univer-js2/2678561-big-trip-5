@@ -1,4 +1,4 @@
-export const POINT_COUNT_DEFAULT = 5;
+export const POINT_COUNT_DEFAULT = 3;
 
 export const SORT_TYPES = [
   { type: 'day', isDisabled: false },
@@ -38,6 +38,18 @@ export const SortType = {
 export const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
+};
+
+export const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
 };
 
 export const EmptyPointsText = {
