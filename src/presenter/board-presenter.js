@@ -25,6 +25,7 @@ export default class BoardPresenter {
       container: tripEventsContainer,
       pointsModel: this.#pointsModel,
       filterModel: this.#filterModel,
+      onDataChange: this.#handleViewAction,
     });
 
     this.#createPresenter = new CreatePresenter({
@@ -41,7 +42,6 @@ export default class BoardPresenter {
   }
 
   #handleNewEventClick = () => {
-
     if (this.#createPresenter.isCreating()) {
       return;
     }
@@ -79,5 +79,4 @@ export default class BoardPresenter {
       .querySelector('.trip-main__event-add-btn')
       .addEventListener('click', this.#handleNewEventClick);
   }
-
 }

@@ -3,7 +3,7 @@ import EmptyPointsView from '../view/empty-points/view.js';
 import SortPresenter from './sort-presenter.js';
 import PointPresenter from './point-presenter.js';
 import { sortPointsBy } from '../utils/sort.js';
-import { SortType, UpdateType, UserAction } from '../const.js';
+import { SortType, UpdateType } from '../const.js';
 import { filter } from '../utils/filters.js';
 
 
@@ -16,11 +16,13 @@ export default class PointsPresenter {
   #sortPresenter = null;
   #emptyPointsComponent = null;
   #sortContainer = null;
+  #onDataChange = null;
 
-  constructor({ container, pointsModel, filterModel }) {
+  constructor({ container, pointsModel, filterModel, onDataChange }) {
     this.#container = container;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+    this.#onDataChange = onDataChange;
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -74,7 +76,7 @@ export default class PointsPresenter {
       container: this.#container,
       pointsModel: this.#pointsModel,
       onModeChange: this.#handleModeChange,
-      onDataChange: this.#handleViewAction,
+      onDataChange: this.#onDataChange,
     });
 
     presenter.init(point);
@@ -99,24 +101,12 @@ export default class PointsPresenter {
 
       case UpdateType.MAJOR:
         this.#currentSortType = SortType.DAY;
+
+        if (this.#sortPresenter) {
+          this.#sortPresenter.setSort(SortType.DAY);
+        }
+
         this.#reRenderPoints();
-        break;
-    }
-  };
-
-  #handleViewAction = (actionType, updateType, update) => {
-    switch (actionType) {
-
-      case UserAction.UPDATE_POINT:
-        this.#pointsModel.updatePoint(updateType, update);
-        break;
-
-      case UserAction.ADD_POINT:
-        this.#pointsModel.addPoint(updateType, update);
-        break;
-
-      case UserAction.DELETE_POINT:
-        this.#pointsModel.deletePoint(updateType, update.id);
         break;
     }
   };

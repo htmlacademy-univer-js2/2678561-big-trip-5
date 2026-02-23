@@ -5,7 +5,7 @@ import { createFavoriteButtonTemplate } from './favorite-button-template.js';
 export function createRoutePointTemplate(point = {}) {
   const {
     type = '',
-    destination = '',
+    destinationName = '',
     formattedDate = '',
     formattedStartTime = '',
     formattedEndTime = '',
@@ -16,7 +16,7 @@ export function createRoutePointTemplate(point = {}) {
     offers = [],
   } = point;
 
-  const title = eventTitle || `${getLabel(type)} ${destination}`;
+  const title = eventTitle || `${getLabel(type)} ${destinationName}`;
 
   return `
     <li class='trip-events__item'>
