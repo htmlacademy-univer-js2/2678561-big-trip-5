@@ -17,6 +17,7 @@ export default class PointsPresenter {
   #emptyPointsComponent = null;
   #sortContainer = null;
   #onDataChange = null;
+  #isLoading = true;
 
   constructor({ container, pointsModel, filterModel, onDataChange }) {
     this.#container = container;
@@ -91,6 +92,11 @@ export default class PointsPresenter {
   #handleModelEvent = (updateType, updatedPoint) => {
     switch (updateType) {
 
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        this.#reRenderPoints();
+        break;
+
       case UpdateType.PATCH:
         this.#pointPresenters.get(updatedPoint.id)?.init(updatedPoint);
         break;
@@ -126,6 +132,11 @@ export default class PointsPresenter {
   };
 
   #renderPointsList() {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const points = this.#getSortedPoints();
     const hasPoints = points.length > 0;
 
@@ -159,6 +170,17 @@ export default class PointsPresenter {
 
     remove(this.#emptyPointsComponent);
     this.#emptyPointsComponent = null;
+  }
+
+  #renderLoading() {
+    this.#clearPoints();
+    this.#removeEmptyPoints();
+
+    this.#emptyPointsComponent = new EmptyPointsView({
+      filterType: 'loading'
+    });
+
+    render(this.#emptyPointsComponent, this.#container);
   }
 
   #reRenderPoints() {
