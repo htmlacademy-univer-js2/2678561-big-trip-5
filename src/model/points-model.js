@@ -1,20 +1,16 @@
-import { pointsMock } from '../mock/points-mock.js';
-import { destinationsMock } from '../mock/destinations-mock.js';
-import { offersMock } from '../mock/offers-mock.js';
 import Observable from '../framework/observable.js';
 
-import { POINT_COUNT_DEFAULT } from '../const.js';
+import { UpdateType } from '../const.js';
 
 export default class PointsModel extends Observable {
+  #apiService = null;
   #points = [];
   #destinations = [];
   #offers = [];
 
-  constructor() {
+  constructor({ apiService }) {
     super();
-    this.#points = this.#getRandomPoints(POINT_COUNT_DEFAULT);
-    this.#destinations = destinationsMock;
-    this.#offers = offersMock;
+    this.#apiService = apiService;
   }
 
   get points() {
@@ -29,10 +25,25 @@ export default class PointsModel extends Observable {
     return this.#offers;
   }
 
-  #getRandomPoints(count) {
-    return [...pointsMock]
-      .sort(() => 0.5 - Math.random())
-      .slice(0, count);
+  async init() {
+    try {
+      const [points, destinations, offers] = await Promise.all([
+        this.#apiService.points,
+        this.#apiService.destinations,
+        this.#apiService.offers,
+      ]);
+
+      this.#points = points;
+      this.#destinations = destinations;
+      this.#offers = offers;
+
+    } catch (err) {
+      this.#points = [];
+      this.#destinations = [];
+      this.#offers = [];
+    }
+
+    this._notify(UpdateType.INIT);
   }
 
   getDestinationById(id) {
@@ -53,20 +64,22 @@ export default class PointsModel extends Observable {
     this._notify(updateType);
   }
 
-  updatePoint(updateType, updatedPoint) {
+  async updatePoint(updateType, updatedPoint) {
     const index = this.#points.findIndex((point) => point.id === updatedPoint.id);
 
     if (index === -1) {
       throw new Error('Can\'t update unexisting point');
     }
 
+    const response = await this.#apiService.updatePoint(updatedPoint);
+
     this.#points = [
       ...this.#points.slice(0, index),
-      updatedPoint,
+      response,
       ...this.#points.slice(index + 1),
     ];
 
-    this._notify(updateType, updatedPoint);
+    this._notify(updateType, response);
   }
 
   addPoint(updateType, update) {
