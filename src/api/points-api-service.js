@@ -77,12 +77,14 @@ export default class PointsApiService extends ApiService {
       date_from: point.dateFrom,
       date_to: point.dateTo,
       base_price: point.price,
-      is_favorite: point.isFavorite,
+      is_favorite: point.isFavorite ?? false,
 
+      id: undefined,
       dateFrom: undefined,
       dateTo: undefined,
       price: undefined,
       isFavorite: undefined,
+      destinationName: undefined,
     };
   }
 }

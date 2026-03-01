@@ -112,8 +112,8 @@ export default class PointPresenter {
     });
   };
 
-  #handleDelete = () => {
-    this.#handleDataChange(
+  #handleDelete = async () => {
+    await this.#handleDataChange(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,
       this.#point,
@@ -133,4 +133,24 @@ export default class PointPresenter {
       updatedPoint,
     );
   };
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editFormComponent.setSaving();
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editFormComponent.setDeleting();
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editFormComponent.setAborting();
+    } else {
+      this.#routePointComponent.shake();
+    }
+  }
 }

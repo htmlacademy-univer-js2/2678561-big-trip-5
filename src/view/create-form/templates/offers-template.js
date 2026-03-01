@@ -1,10 +1,15 @@
+import he from 'he';
+
 function createOfferTemplate(offer, isSelected) {
   const { id, title, price } = offer;
+
+  const safeTitle = he.encode(title);
+
   return `
     <div class='event__offer-selector'>
       <input class='event__offer-checkbox  visually-hidden' id='event-offer-${id}' type='checkbox' name='event-offer-${id}' ${isSelected ? 'checked' : ''}>
       <label class='event__offer-label' for='event-offer-${id}'>
-        <span class='event__offer-title'>${title}</span>
+        <span class='event__offer-title'>${safeTitle}</span>
         &plus;&euro;&nbsp;
         <span class='event__offer-price'>${price}</span>
       </label>

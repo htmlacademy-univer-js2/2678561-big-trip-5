@@ -284,4 +284,24 @@ export default class CreateFormView extends AbstractStatefulView {
     this.#destroyDatepickers();
     super.removeElement();
   }
+
+  setSaving() {
+    this.updateElement({
+      ...this._state,
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetState = () => {
+      this.updateElement({
+        ...this._state,
+        isDisabled: false,
+        isSaving: false,
+      });
+    };
+
+    this.shake(resetState);
+  }
 }

@@ -2,9 +2,11 @@ import { getLabel, formatDate, formatTime } from '../../../utils/utils.js';
 import { createEventTypesTemplate } from './event-types-template.js';
 import { createDestinationOptionsTemplate } from './destination-options-template.js';
 import { createEventDetailsTemplate } from './event-details-template.js';
+import he from 'he';
 
 export function createEditFormTemplate(data = {}, isFormValid = true) {
-  const { point = {}, destinations = [], offersByType = [] } = data;
+  const { point = {}, destinations = [], offersByType = [],
+    isDisabled = false, isSaving = false, isDeleting = false } = data;
 
   const {
     type = 'flight',
@@ -20,6 +22,9 @@ export function createEditFormTemplate(data = {}, isFormValid = true) {
   const currentDestination =
   destinations.find((d) => d.name === destinationName) || null;
   const selectedOfferIds = offers;
+
+  const safeDestinationName = he.encode(destinationName);
+  const safePrice = he.encode(String(price));
 
   const displayDateFrom = `${formatDate(dateFrom)} ${formatTime(dateFrom)}`;
   const displayDateTo = `${formatDate(dateTo)} ${formatTime(dateTo)}`;
@@ -42,7 +47,7 @@ export function createEditFormTemplate(data = {}, isFormValid = true) {
           <label class='event__label event__type-output' for='event-destination'>
             ${getLabel(type)}
           </label>
-          <input class='event__input event__input--destination' id='event-destination' type='text' name='event-destination' value='${destinationName}' list='destination-list' required>
+          <input class='event__input event__input--destination' id='event-destination' type='text' name='event-destination' value='${safeDestinationName}' list='destination-list' required>
           ${createDestinationOptionsTemplate(destinations)}
         </div>
 
@@ -59,11 +64,19 @@ export function createEditFormTemplate(data = {}, isFormValid = true) {
             <span class='visually-hidden'>Price</span>
             &euro;
           </label>
-          <input class='event__input event__input--price' id='event-price' type='number' min='0' max='1000000' step='1' name='event-price' value='${price}' required>
+          <input class='event__input event__input--price' id='event-price' type='number' min='0' max='1000000' step='1' name='event-price' value='${safePrice}' required>
         </div>
 
-        <button class='event__save-btn btn btn--blue' type='submit' ${!isFormValid ? 'disabled' : ''}>Save</button>
-        <button class='event__reset-btn' type='reset'>Delete</button>
+        <button class="event__save-btn btn btn--blue"
+          type="submit"
+          ${!isFormValid || isDisabled ? 'disabled' : ''}>
+          ${isSaving ? 'Saving...' : 'Save'}
+        </button>
+        <button class="event__reset-btn"
+          type="reset"
+          ${isDisabled ? 'disabled' : ''}>
+          ${isDeleting ? 'Deleting...' : 'Delete'}
+        </button>
         <button class='event__rollup-btn' type='button'>
           <span class='visually-hidden'>Open event</span>
         </button>

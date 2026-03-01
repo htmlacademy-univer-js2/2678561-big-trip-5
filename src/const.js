@@ -43,6 +43,11 @@ export const Mode = {
   EDITING: 'EDITING',
 };
 
+export const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
   ADD_POINT: 'ADD_POINT',
