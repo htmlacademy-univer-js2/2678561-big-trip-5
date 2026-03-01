@@ -1,6 +1,7 @@
 import FilterPresenter from './filter-presenter.js';
 import PointsPresenter from './points-presenter.js';
 import CreatePresenter from './create-presenter.js';
+import TripInfoPresenter from './trip-info-presenter.js';
 import { UserAction, UpdateType, FilterType, TimeLimit } from '../const.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
@@ -10,16 +11,26 @@ export default class BoardPresenter {
   #filtersPresenter = null;
   #pointsPresenter = null;
   #createPresenter = null;
+  #tripInfoPresenter = null;
   #sortContainer = null;
+  #tripInfoContainer = null;
 
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT,
   });
 
-  constructor({ sortContainer, filtersContainer, tripEventsContainer, pointsModel, filterModel }) {
+  constructor({
+    sortContainer,
+    filtersContainer,
+    tripEventsContainer,
+    tripInfoContainer,
+    pointsModel,
+    filterModel
+  }) {
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+    this.#tripInfoContainer = tripInfoContainer;
 
     this.#filtersPresenter = new FilterPresenter({
       container: filtersContainer,
@@ -38,6 +49,11 @@ export default class BoardPresenter {
       container: tripEventsContainer,
       pointsModel: this.#pointsModel,
       onDataChange: this.#handleViewAction,
+    });
+
+    this.#tripInfoPresenter = new TripInfoPresenter({
+      container: this.#tripInfoContainer,
+      pointsModel: this.#pointsModel,
     });
 
     this.#sortContainer = sortContainer;
@@ -98,6 +114,7 @@ export default class BoardPresenter {
   };
 
   init() {
+    this.#tripInfoPresenter.init();
     this.#filtersPresenter.init();
     this.#pointsPresenter.init(this.#sortContainer);
 

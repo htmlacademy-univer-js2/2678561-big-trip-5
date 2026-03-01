@@ -42,7 +42,7 @@ export default class CreatePresenter {
   #handleSubmit = async (point) => {
     await this.#onDataChange(
       UserAction.ADD_POINT,
-      UpdateType.MINOR,
+      UpdateType.MAJOR,
       point
     );
   };
