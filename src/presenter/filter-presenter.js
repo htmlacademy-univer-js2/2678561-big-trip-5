@@ -1,7 +1,6 @@
 import { render, replace, remove } from '../framework/render.js';
 import FiltersView from '../view/filters/view.js';
-import { FilterType, UpdateType } from '../const.js';
-import { isFuture, isPresent, isPast } from '../utils/filters.js';
+import { UpdateType } from '../const.js';
 
 export default class FilterPresenter {
   #container = null;
@@ -14,11 +13,12 @@ export default class FilterPresenter {
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
 
+    this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   init() {
-    const filters = this.#getFiltersData();
+    const filters = this.#getFilters();
 
     const prevComponent = this.#filterComponent;
 
@@ -37,6 +37,16 @@ export default class FilterPresenter {
     remove(prevComponent);
   }
 
+  #getFilters() {
+    const points = this.#pointsModel.points;
+    const enabledFilters = this.#filterModel.getEnabledFilters(points);
+
+    return enabledFilters.map((filter) => ({
+      ...filter,
+      isDisabled: filter.count === 0
+    }));
+  }
+
   #handleFilterTypeChange = (filterType) => {
     if (this.#filterModel.filter === filterType) {
       return;
@@ -48,31 +58,4 @@ export default class FilterPresenter {
   #handleModelEvent = () => {
     this.init();
   };
-
-  #getFiltersData() {
-    const points = this.#pointsModel.points;
-
-    return [
-      {
-        type: FilterType.EVERYTHING,
-        count: points.length,
-        isDisabled: points.length === 0,
-      },
-      {
-        type: FilterType.FUTURE,
-        count: points.filter(isFuture).length,
-        isDisabled: points.filter(isFuture).length === 0,
-      },
-      {
-        type: FilterType.PRESENT,
-        count: points.filter(isPresent).length,
-        isDisabled: points.filter(isPresent).length === 0,
-      },
-      {
-        type: FilterType.PAST,
-        count: points.filter(isPast).length,
-        isDisabled: points.filter(isPast).length === 0,
-      },
-    ];
-  }
 }

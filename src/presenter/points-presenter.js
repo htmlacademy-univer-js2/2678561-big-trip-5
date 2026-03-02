@@ -200,4 +200,16 @@ export default class PointsPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
   }
+
+  setSaving(pointId) {
+    this.#pointPresenters.get(pointId)?.setSaving();
+  }
+
+  setDeleting(pointId) {
+    this.#pointPresenters.get(pointId)?.setDeleting();
+  }
+
+  setAborting(pointId) {
+    this.#pointPresenters.get(pointId)?.setAborting();
+  }
 }

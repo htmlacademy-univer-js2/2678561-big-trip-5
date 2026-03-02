@@ -300,4 +300,33 @@ export default class EditFormView extends AbstractStatefulView {
     this.#destroyDatepickers();
     super.removeElement();
   }
+
+  setSaving() {
+    this.updateElement({
+      ...this._state,
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setDeleting() {
+    this.updateElement({
+      ...this._state,
+      isDisabled: true,
+      isDeleting: true,
+    });
+  }
+
+  setAborting() {
+    const resetState = () => {
+      this.updateElement({
+        ...this._state,
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.shake(resetState);
+  }
 }

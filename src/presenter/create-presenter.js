@@ -39,14 +39,12 @@ export default class CreatePresenter {
     this.#createFormComponent = null;
   }
 
-  #handleSubmit = (point) => {
-    this.#onDataChange(
+  #handleSubmit = async (point) => {
+    await this.#onDataChange(
       UserAction.ADD_POINT,
-      UpdateType.MINOR,
+      UpdateType.MAJOR,
       point
     );
-
-    this.destroy();
   };
 
   #handleCancel = () => {
@@ -55,5 +53,13 @@ export default class CreatePresenter {
 
   isCreating() {
     return this.#createFormComponent !== null;
+  }
+
+  setSaving() {
+    this.#createFormComponent?.setSaving();
+  }
+
+  setAborting() {
+    this.#createFormComponent?.setAborting();
   }
 }
