@@ -38,6 +38,13 @@ export const SortType = {
   OFFERS: 'offers',
 };
 
+export const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
+
 export const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
@@ -59,13 +66,6 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
-};
-
-export const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
-  POST: 'POST',
-  DELETE: 'DELETE',
 };
 
 export const EmptyPointsText = {
